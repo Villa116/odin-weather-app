@@ -7,7 +7,10 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   min-height: 100vh;
   color: #ffffff;
   transition: background 0.5s ease;
@@ -220,4 +223,40 @@ h3 {
 .forecast-precip {
   font-size: 0.85rem;
   opacity: 0.8;
+}
+
+.current-temp-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+
+.current-icon {
+  width: 72px;
+  height: 72px;
+}
+
+.forecast-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0.25rem auto;
+  display: block;
+}
+
+.app-footer {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.app-footer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.app-footer a:hover {
+  opacity: 1;
 }

@@ -22,7 +22,11 @@ function formatWind(speedKmh, isMetric) {
 function formatDayName(dateString) {
   const [year, month, day] = dateString.split("-").map(Number);
   const date = new Date(year, month - 1, day);
-  return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export function setLoading(isLoading) {
@@ -61,16 +65,37 @@ export function applyWeatherTheme(iconCode) {
   }
 }
 
-export function renderWeather(data, isMetric) {
+async function loadWeatherIcon(iconName) {
+  try {
+    const iconModule = await import(`./icons/${iconName}.svg`);
+    return iconModule.default;
+  } catch {
+    const fallbackModule = await import("./icons/clear-day.svg");
+    return fallbackModule.default;
+  }
+}
+
+export async function renderWeather(data, isMetric) {
   const { location, description, current, forecast } = data;
 
   applyWeatherTheme(current.icon);
 
+  // Dynamically load current icon and all 5 forecast icons in parallel
+  const [currentIconSrc, ...forecastIconSrcs] = await Promise.all([
+    loadWeatherIcon(current.icon),
+    ...forecast.map((day) => loadWeatherIcon(day.icon)),
+  ]);
+
   const forecastHTML = forecast
     .map(
-      (day) => `
+      (day, index) => `
       <div class="forecast-card">
         <p class="forecast-date">${formatDayName(day.date)}</p>
+        <img
+          src="${forecastIconSrcs[index]}"
+          alt="${day.conditions}"
+          class="forecast-icon"
+        />
         <p class="forecast-cond">${day.conditions}</p>
         <p class="forecast-temps">
           <span class="temp-max">${formatTemp(day.tempMaxC, isMetric)}</span>
@@ -86,8 +111,15 @@ export function renderWeather(data, isMetric) {
     <div class="current-card">
       <div class="current-main">
         <h2>${location}</h2>
+        <div class="current-temp-row">
+          <img
+            src="${currentIconSrc}"
+            alt="${current.conditions}"
+            class="current-icon"
+          />
+          <p class="current-temp">${formatTemp(current.tempC, isMetric)}</p>
+        </div>
         <p class="current-conditions">${current.conditions}</p>
-        <p class="current-temp">${formatTemp(current.tempC, isMetric)}</p>
         <p class="current-summary">${description}</p>
       </div>
       <div class="current-details">
