@@ -1,11 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Template</title>
+    <title>Weather App</title>
   </head>
-  <body>
-    <h1>Webpack Template Ready</h1>
+  <body class="theme-default">
+    <main class="app-container">
+      <header class="app-header">
+        <h1>Weather Forecast</h1>
+
+        <div class="controls">
+          <form id="search-form" class="search-form">
+            <input
+              type="text"
+              id="location-input"
+              placeholder="Search city (e.g. Johannesburg, Tokyo)..."
+              aria-label="Location"
+              required
+            />
+            <button type="submit">Search</button>
+          </form>
+
+          <button id="unit-toggle" class="unit-toggle" type="button">
+            °C / <span class="inactive">°F</span>
+          </button>
+        </div>
+      </header>
+
+      <div id="loading" class="loading hidden" role="status">
+        <div class="spinner"></div>
+        <p>Fetching weather data...</p>
+      </div>
+
+      <div id="error-message" class="error-message hidden" role="alert"></div>
+
+      <section id="weather-display" class="weather-display hidden"></section>
+    </main>
   </body>
 </html>
